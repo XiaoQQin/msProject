@@ -1,6 +1,8 @@
 package com.hwm.controller;
 
 import com.hwm.domain.User;
+import com.hwm.redis.RedisService;
+import com.hwm.redis.UserProfix;
 import com.hwm.result.Result;
 import com.hwm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class SampleController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RedisService redisService;
 
     @RequestMapping("/hello")
     @ResponseBody
@@ -34,5 +39,7 @@ public class SampleController {
         Boolean tx = userService.tx();
         return Result.success(tx);
     }
+
+
 
 }
