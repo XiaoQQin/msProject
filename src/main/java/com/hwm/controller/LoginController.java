@@ -1,17 +1,13 @@
 package com.hwm.controller;
 
 import com.hwm.redis.RedisService;
-import com.hwm.result.CodeMsg;
 import com.hwm.result.Result;
 import com.hwm.service.MsUserService;
-import com.hwm.utils.ValidatorUtils;
-import com.hwm.vo.LoginVo;
-import com.sun.deploy.net.HttpResponse;
+import com.hwm.val.LoginVal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,7 +33,7 @@ public class LoginController {
 
     @RequestMapping("/do_login")
     @ResponseBody
-    public Result<Boolean> doLogin(HttpServletResponse response,@Valid LoginVo loginVo){
+    public Result<Boolean> doLogin(HttpServletResponse response,@Valid LoginVal loginVo){
         logger.info(loginVo.toString());
         //登陆
         msUserService.login(response,loginVo);

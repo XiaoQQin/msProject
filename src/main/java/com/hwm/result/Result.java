@@ -30,6 +30,10 @@ public class Result<T> {
         return new Result<T>(codeMsg);
     }
 
+    public static  <T> Result<T> error(CodeMsg codeMsg,String msg){
+        return new Result<T>(codeMsg);
+    }
+
     private Result(T data){
         this.data=data;
     }

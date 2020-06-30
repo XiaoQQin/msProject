@@ -8,7 +8,7 @@ import com.hwm.redis.UserProfix;
 import com.hwm.result.CodeMsg;
 import com.hwm.utils.MD5Util;
 import com.hwm.utils.UUIDUtil;
-import com.hwm.vo.LoginVo;
+import com.hwm.val.LoginVal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -32,7 +32,7 @@ public class MsUserServiceImpl implements MsUserService{
     }
 
     @Override
-    public boolean login(HttpServletResponse response,LoginVo loginVo) {
+    public boolean login(HttpServletResponse response,LoginVal loginVo) {
 
         //传入的参数为空
         if(loginVo==null){

@@ -53,6 +53,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         //遍历所有的cookies
         //返回name相同的cookie
         Cookie[] cookies = request.getCookies();
+
         for (Cookie cookie : cookies) {
             if(cookie.getName().equals(cookiNameToken))
                 return cookie.getValue();
