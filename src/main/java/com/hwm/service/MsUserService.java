@@ -12,4 +12,5 @@ public interface MsUserService {
     boolean login(HttpServletResponse response,LoginVal loginVo);
 
     MsUser getUserByToken(HttpServletResponse response,String token);
+    boolean updatePassword(String token, long id, String formPass);
 }

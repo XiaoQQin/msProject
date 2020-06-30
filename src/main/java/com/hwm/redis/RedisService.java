@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -82,6 +83,24 @@ public class RedisService {
         return result;
     }
 
+    /**
+     * 从 redis 中移除指定 key 对应的数据
+     * @param keys 可以传一个值或多个
+     */
+    public boolean remove(KeyPrefix prefix,String key) {
+        boolean result = false;
+
+        try {
+            if (!StringUtils.isEmpty(key)) {
+                String realKey = prefix.getPrefix() + key;
+                this.redisTemplate.delete(realKey);
+                result=true;
+            }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+        return result;
+    }
     /**
      * 将指定的 key, value 放到 redis 中，并设置过期时间
      * @param key   键，不能为null

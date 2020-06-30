@@ -3,6 +3,7 @@ package com.hwm.service;
 import com.hwm.dao.MsUserDao;
 import com.hwm.domain.MsUser;
 import com.hwm.exception.GlobalException;
+import com.hwm.redis.MsUserKey;
 import com.hwm.redis.RedisService;
 import com.hwm.redis.UserProfix;
 import com.hwm.result.CodeMsg;
@@ -26,9 +27,50 @@ public class MsUserServiceImpl implements MsUserService{
     @Autowired
     RedisService redisService;
 
+    /**
+     * 根据id获取相关msUser缓存
+     *
+     * @param id
+     * @return
+     */
     @Override
     public MsUser getById(long id) {
-        return msUserDao.getById(id);
+        //先从redis缓存
+        MsUser msUser = redisService.get(MsUserKey.getById, id + "");
+        //缓存不为空，直接返回
+        if(msUser!=null)
+            return msUser;
+        //从数据库中获取
+        msUser = msUserDao.getById(id);
+        //然后存入redis中
+        if(msUser!=null){
+            redisService.set(MsUserKey.getById, ""+id, msUser);
+        }
+        return msUser;
+    }
+
+
+    @Override
+    public boolean updatePassword(String token, long id, String formPass) {
+        //首先获取相关id
+        MsUser msUser = getById(id);
+        if(msUser==null){
+            throw  new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+        }
+        //更新数据库
+        MsUser toBeUpdate=new MsUser();
+        toBeUpdate.setId(id);
+        //设置新的密码
+        toBeUpdate.setPassword(MD5Util.formPassToDBPass(formPass, msUser.getSalt()));
+        //更新到数据库中
+        msUserDao.update(toBeUpdate);
+
+        //删除redis中的数据
+        redisService.remove(MsUserKey.getById,id+"");
+        msUser.setPassword(toBeUpdate.getPassword());
+        redisService.set(MsUserKey.token, token, msUser);
+
+        return false;
     }
 
     @Override
@@ -76,6 +118,8 @@ public class MsUserServiceImpl implements MsUserService{
             addCookie(response,token,msUser);
         return  msUser;
     }
+
+
 
     private void addCookie(HttpServletResponse response,String token,MsUser msUser){
         //存入redis
