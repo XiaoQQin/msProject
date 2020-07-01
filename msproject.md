@@ -87,7 +87,7 @@ primary key (`id`)
    `goods_stock` int(11) default '0' comment '商品库存，-1表示无限制',
    primary key(`id`)
   )engine=innodb default charset=utf8
-   ```
+  ```
 
   
 
@@ -139,4 +139,73 @@ create table `ms_order`(
  primary key(`id`)
 )engine=innodb auto_increment=3 default charset=utf8
        ```
+
+# 学到的知识点
+
+
+
+-   GET和POST的区别
+
+     GET具有幂等性，也就是GET方法调用多次返回的数据是一致的，在不改动数据的前提下。通俗的来讲就是  GET方法不改变数据。
+
+     POST则当改变服务端的数据时使用。
+
+-   如何保证买超问题
+
+     利用数据库，在sql语句中设置当前商品库存大于0，才让商品库存减一
+
+    ```sql
+  update ms_goods set stock_count = stock_count - 1 where goods_id = #{goodsId} and stock_count>0
+  ```
+
+  SQL加库存数量判断：防止库存变为负数
+
+-   如何解决一个用户秒杀两个商品问题
+
+    利用数据库，生成商品id和用户id的唯一索引
+
+    ```sql
+  alter table ms_order add unique index u_uid_gid(user_id,goods_id)
+  ```
+
+  
+
+#  静态资源优化
+
+-  js/css压缩，减少流量
+- 多个js/css组合，减少连接数
+- CDN就近访问
+
+
+
+# 秒杀接口优化
+
+-  redis预减库存减少数据库访问
+  -   系统初始化，把商品库存数量加载到redis
+  -   收到请求，redis预减库存，库存不足，直接返回 
+  -  库存还有，请求入队，返回排队中 
+  
+- 内存标记减少redis访问
+
+  设置一个map,来存储当前商品是否已经结束秒杀。若已经结束，则直接返回，不访问redis
+
+- 请求先入队缓存，异步下单
+
+- 请求出队，生成订单，减少库存
+
+-  客户端轮询，是否秒杀成功
+
+
+
+#  集成RabbitMQ
+
+## 安装依赖
+
+```shell
+添加依赖 spring-boot-starter-amqp
+```
+
+## 创建消息接受者
+
+## 创建消息发送者
 

@@ -1,6 +1,8 @@
 package com.hwm.controller;
 
 import com.hwm.domain.User;
+import com.hwm.rabbitmq.MQSender;
+import com.hwm.rabbitmq.MQreceiver;
 import com.hwm.redis.RedisService;
 import com.hwm.redis.UserProfix;
 import com.hwm.result.Result;
@@ -19,6 +21,12 @@ public class SampleController {
 
     @Autowired
     RedisService redisService;
+
+    @Autowired
+    MQSender mqSender;
+
+    @Autowired
+    MQreceiver mQreceiver;
 
     @RequestMapping("/hello")
     @ResponseBody
@@ -42,4 +50,20 @@ public class SampleController {
 
 
 
+    //direct方式
+    @RequestMapping("/rabbit")
+    @ResponseBody
+    public Result testRabbitMQ() {
+        mqSender.send("hello rabbit");
+        return Result.success("test success");
+    }
+
+
+    //direct方式
+    @RequestMapping("/mqTopic")
+    @ResponseBody
+    public Result testRabbitMQTopic() {
+        mqSender.sendTopic("hello topic");
+        return Result.success("test success");
+    }
 }

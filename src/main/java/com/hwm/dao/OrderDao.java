@@ -5,6 +5,7 @@ import com.hwm.domain.MsOrder;
 import com.hwm.domain.OrderInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,7 @@ public interface OrderDao {
 
     @Insert("insert into ms_order (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId})")
     void insertMsOrder(MsOrder msOrder);
+
+    @Select("select * from order_info where id=#{orderId}")
+    OrderInfo getOrderById(long orderId);
 }

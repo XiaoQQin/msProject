@@ -37,11 +37,11 @@ public class GoodsServiceImpl implements GoodsService {
      * @param goodsVal
      */
     @Override
-    public void reduceStock(GoodsVal goodsVal) {
+    public boolean reduceStock(GoodsVal goodsVal) {
         MsGoods msGoods=new MsGoods();
         msGoods.setGoodsId(goodsVal.getId());
-        System.out.println("int GoodsServiceImpl"+goodsVal.getId());
-        goodsDao.reduceMsGoodsStock(msGoods);
+        int res = goodsDao.reduceMsGoodsStock(msGoods);
+        return res>0;
     }
 
 }

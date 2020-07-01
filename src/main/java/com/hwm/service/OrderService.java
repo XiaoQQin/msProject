@@ -8,4 +8,6 @@ import com.hwm.val.GoodsVal;
 public interface OrderService {
 
     OrderInfo createOrder(MsUser msuser, GoodsVal goodsVal);
+
+    OrderInfo getOrderById(long orderId);
 }

@@ -2,7 +2,7 @@
 spring:
   thymeleaf:
     cache: false
-    mode: HTML5
+    mode: HTML
 
   datasource:
     username: root
@@ -35,6 +35,32 @@ spring:
     host: 182.92.169.128
     port: 6379
     password: 123456
+  resources:
+    add-mappings: true
+    chain:
+      cache: true
+      enabled: true
+      html-application-cache: true
+    static-locations: classpath:/static/
+
+
+  rabbitmq:
+    host: 182.92.169.128
+    port: 5672
+    username: hwm
+    password: 123456
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 10 #消费者数量
+        max-concurrency: 10
+        prefetch: 1    #每次从队列取1个
+        auto-startup: true
+        default-requeue-rejected: true  #消费者消费失败后从新加入到队列中
+    template:
+      retry:
+        enabled: true
+
 
 
 mybatis:
@@ -49,4 +75,3 @@ mybatis:
 logging:
   level:
     com.hwm.dao: debug
-

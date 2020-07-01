@@ -3,7 +3,7 @@ package com.hwm.service;
 import com.hwm.dao.MsUserDao;
 import com.hwm.domain.MsUser;
 import com.hwm.exception.GlobalException;
-import com.hwm.redis.MsUserKey;
+import com.hwm.redis.MsUserPrefix;
 import com.hwm.redis.RedisService;
 import com.hwm.redis.UserProfix;
 import com.hwm.result.CodeMsg;
@@ -36,7 +36,7 @@ public class MsUserServiceImpl implements MsUserService{
     @Override
     public MsUser getById(long id) {
         //先从redis缓存
-        MsUser msUser = redisService.get(MsUserKey.getById, id + "");
+        MsUser msUser = redisService.get(MsUserPrefix.getById, id + "");
         //缓存不为空，直接返回
         if(msUser!=null)
             return msUser;
@@ -44,7 +44,7 @@ public class MsUserServiceImpl implements MsUserService{
         msUser = msUserDao.getById(id);
         //然后存入redis中
         if(msUser!=null){
-            redisService.set(MsUserKey.getById, ""+id, msUser);
+            redisService.set(MsUserPrefix.getById, ""+id, msUser);
         }
         return msUser;
     }
@@ -66,9 +66,9 @@ public class MsUserServiceImpl implements MsUserService{
         msUserDao.update(toBeUpdate);
 
         //删除redis中的数据
-        redisService.remove(MsUserKey.getById,id+"");
+        redisService.remove(MsUserPrefix.getById,id+"");
         msUser.setPassword(toBeUpdate.getPassword());
-        redisService.set(MsUserKey.token, token, msUser);
+        redisService.set(MsUserPrefix.token, token, msUser);
 
         return false;
     }

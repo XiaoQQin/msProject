@@ -1,13 +1,11 @@
 package com.hwm.controller;
 
 import com.hwm.domain.MsUser;
-import com.hwm.redis.GoodsKey;
+import com.hwm.redis.GoodsPrefix;
 import com.hwm.redis.RedisService;
 import com.hwm.result.Result;
 import com.hwm.service.GoodsService;
 import com.hwm.service.MsUserService;
-import com.hwm.service.MsUserServiceImpl;
-import com.hwm.service.UserService;
 import com.hwm.val.GoodsDetailVal;
 import com.hwm.val.GoodsVal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.WebContext;
-import org.thymeleaf.spring5.context.webflux.SpringWebFluxContext;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -47,7 +43,7 @@ public class GoodsController {
     public String to_list(HttpServletRequest request,HttpServletResponse response, Model model, MsUser msuser){
         model.addAttribute("user",msuser);
         //从redis中获取页面缓存
-        String html = redisService.get(GoodsKey.getGoodsList, "");
+        String html = redisService.get(GoodsPrefix.getGoodsList, "");
         //缓存不为空，直接返回页面
         if(!StringUtils.isEmpty(html)){
             return html;
@@ -63,7 +59,7 @@ public class GoodsController {
         //springBoot手动渲染
         html=thymeleafViewResolver.getTemplateEngine().process("goods_list",wc);
         if(!StringUtils.isEmpty(html)){
-            redisService.set(GoodsKey.getGoodsList, "", html);
+            redisService.set(GoodsPrefix.getGoodsList, "", html);
         }
         return html;
     }
@@ -77,7 +73,7 @@ public class GoodsController {
 
         //获取redis中相关的缓存页面
         //从redis中获取页面缓存
-        String html = redisService.get(GoodsKey.getGoodsDetail, "");
+        String html = redisService.get(GoodsPrefix.getGoodsDetail, "");
         //缓存不为空，直接返回页面
         if(!StringUtils.isEmpty(html)){
             return html;
@@ -112,7 +108,7 @@ public class GoodsController {
         //springBoot手动渲染
         html=thymeleafViewResolver.getTemplateEngine().process("goods_detail",wc);
         if(!StringUtils.isEmpty(html)){
-            redisService.set(GoodsKey.getGoodsDetail, "", html);
+            redisService.set(GoodsPrefix.getGoodsDetail, "", html);
         }
         return html;
     }
@@ -150,6 +146,7 @@ public class GoodsController {
         goodsDetailVal.setMsStatue(msStatus);
         goodsDetailVal.setRemainSeconds(remainSeconds);
         //将对象返回给前端
+        System.out.println("成功返回给客户端");
         return Result.success(goodsDetailVal);
     }
 

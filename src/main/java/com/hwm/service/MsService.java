@@ -9,4 +9,6 @@ public interface MsService {
     MsOrder getMsOrderByUserIdGoodsId(long msuserId, long goodsId);
 
     OrderInfo doMs(MsUser msuser, GoodsVal goodsVal);
+
+    long getMsResult(Long msUserId, long goodsId);
 }

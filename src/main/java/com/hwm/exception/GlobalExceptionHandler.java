@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
             String msg = objectError.getDefaultMessage();
             return Result.error(CodeMsg.BIND_ERROR.fillArgs(msg));
         }else{
-            return Result.error(new CodeMsg(50000,e.getMessage()));
+            return Result.error(new CodeMsg(50000,"服务器端异常"+e.getMessage()));
         }
 
     }
