@@ -48,7 +48,13 @@
                         <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
                         <input type="hidden" name="goodsId"  id="goodsId" />
                     </form>-->
-                <button class="btn btn-primary btn-block" type="button" id="buyButton"onclick="doMs()">立即秒杀</button>
+                <div class="row">
+                    <div class="form-inline">
+                        <img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
+                        <input id="verifyCode"  class="form-control" style="display:none"/>
+                        <button class="btn btn-primary" type="button" id="buyButton"onclick="getMsPath()">立即秒杀</button>
+                    </div>
+                </div>
                 <input type="hidden" name="goodsId"  id="goodsId" />
             </td>
         </tr>
@@ -126,18 +132,48 @@
                 clearTimeout(timeout);
             }
             $("#miaoshaTip").html("秒杀进行中")
+            //获取验证码
+            console.log("goodsId是  "+$("#goodsId").val());
+            $("#verifyCodeImg").attr("src","/ms/verifyCode?goodsId="+$("#goodsId").val());
+            $("#verifyCodeImg").show();
+            $("#verifyCode").show();
+
         }else{  //秒杀结束
             $("#buyButton").attr("disabled", true);
             $("#miaoshaTip").html("秒杀已经结束");
+            $("#verifyCodeImg").hide();
+            $("#verifyCode").hide();
         }
     }
-
-    function doMs() {
+    function getMsPath() {
+        var goodsId = $("#goodsId").val();
+        g_showLoading();
         $.ajax({
-            url:"/ms/do_ms",
+            url:"/ms/path",
+            type:"GET",
+            data:{
+                goodsId:goodsId,
+                verifyCode:$("#verifyCode").val()
+            },
+            success:function(data){
+                if(data.code == 0){
+                    var path = data.data;
+                    doMs(path);
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
+    function doMs(path) {
+        $.ajax({
+            url:"/ms/"+path+"/do_ms",
             type:"POST",
             data:{
-                goodsId:$("#goodsId").val(),
+                goodsId:$("#goodsId").val()
             },
             success:function(data){
                 //返回的Result对象，Resutl对象内部有OrderInfo,所以要使用data.data.id
@@ -173,7 +209,7 @@
                         //继续轮询,50ms
                         setTimeout(function () {
                             getMsResult(goodsId);
-                        },50)
+                        },200)
                     }else{
                         layer.confirm("恭喜你秒杀成功",{btn:["查看订单","返回"]},function () {
                             window.location.href="/order_detail.htm?orderId="+result;
@@ -190,6 +226,9 @@
                 layer.msg("客户端请求有误");
             }
         });
+    }
+    function refreshVerifyCode(){
+        $("#verifyCodeImg").attr("src", "/ms/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
     }
 </script>
 </html>

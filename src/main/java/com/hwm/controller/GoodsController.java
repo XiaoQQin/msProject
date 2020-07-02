@@ -3,6 +3,7 @@ package com.hwm.controller;
 import com.hwm.domain.MsUser;
 import com.hwm.redis.GoodsPrefix;
 import com.hwm.redis.RedisService;
+import com.hwm.result.CodeMsg;
 import com.hwm.result.Result;
 import com.hwm.service.GoodsService;
 import com.hwm.service.MsUserService;
@@ -34,10 +35,17 @@ public class GoodsController {
     @Autowired
     RedisService redisService;
 
-    //自动注入页面的解析
     @Autowired
     ThymeleafViewResolver thymeleafViewResolver;
 
+    /**
+     * 获取所有商品,使用了redis缓存页面的方式
+     * @param request
+     * @param response
+     * @param model
+     * @param msuser
+     * @return
+     */
     @RequestMapping("/to_list")
     @ResponseBody
     public String to_list(HttpServletRequest request,HttpServletResponse response, Model model, MsUser msuser){
@@ -64,64 +72,21 @@ public class GoodsController {
         return html;
     }
 
-    @RequestMapping("/to_detail2/{goodsId}")
-    @ResponseBody
-    public String to_detail2(HttpServletRequest request,HttpServletResponse response,
-                            Model model, MsUser msuser,
-                            @PathVariable("goodsId") long goodsId){
-        model.addAttribute("user",msuser);
-
-        //获取redis中相关的缓存页面
-        //从redis中获取页面缓存
-        String html = redisService.get(GoodsPrefix.getGoodsDetail, "");
-        //缓存不为空，直接返回页面
-        if(!StringUtils.isEmpty(html)){
-            return html;
-        }
-        //查询商品列表,包含秒杀信息
-        GoodsVal goodsVal=goodsService.getGoodsValById(goodsId);
-        model.addAttribute("goods",goodsVal);
-        //获取商品秒杀开始时间,结束时间，现在时间
-        long startTime = goodsVal.getStartTime().getTime();
-        long endTime = goodsVal.getEndTime().getTime();
-        long currentTime = System.currentTimeMillis();
-
-        int msStatus = 0;  //状态
-        int remainSeconds = 0; //剩余时间
-        if(currentTime<startTime){ //还未开始
-            msStatus=0;
-            remainSeconds=(int)((startTime-currentTime)/1000);
-        }else  if(currentTime>endTime){ //结束
-            msStatus=2;
-            remainSeconds=-1;
-        }else {
-            msStatus=1;
-            remainSeconds=0;
-        }
-        model.addAttribute("msStatue",msStatus);
-        model.addAttribute("remainSeconds",remainSeconds);
-        //生成webContext
-        WebContext wc=new WebContext(request,response,
-                request.getServletContext(),
-                request.getLocale(),
-                model.asMap());
-        //springBoot手动渲染
-        html=thymeleafViewResolver.getTemplateEngine().process("goods_detail",wc);
-        if(!StringUtils.isEmpty(html)){
-            redisService.set(GoodsPrefix.getGoodsDetail, "", html);
-        }
-        return html;
-    }
-
+    /**
+     * 获取商品的详细信息
+     * @param model
+     * @param msuser
+     * @param goodsId
+     * @return
+     */
     @RequestMapping("/to_detail/{goodsId}")
     @ResponseBody
-    public Result to_detail(HttpServletRequest request,HttpServletResponse response,
-                            Model model, MsUser msuser,
+    public Result to_detail(Model model, MsUser msuser,
                             @PathVariable("goodsId") long goodsId){
-
+        //还没进行登录
+        if(msuser==null)return Result.error(CodeMsg.SESSION_ERROR);
         //查询商品列表,包含秒杀信息
         GoodsVal goodsVal=goodsService.getGoodsValById(goodsId);
-        model.addAttribute("goods",goodsVal);
         //获取商品秒杀开始时间,结束时间，现在时间
         long startTime = goodsVal.getStartTime().getTime();
         long endTime = goodsVal.getEndTime().getTime();
@@ -133,20 +98,18 @@ public class GoodsController {
 
         if(currentTime<startTime){ //还未开始
             remainSeconds=(int)((startTime-currentTime)/1000);
-        }else  if(currentTime>endTime){ //结束
+        }else  if(currentTime>endTime){ //已经结束
             msStatus=2;
             remainSeconds=-1;
         }else {                     //正在进行秒杀
             msStatus=1;
         }
-
+        //设置对象，返回给前端
         GoodsDetailVal goodsDetailVal=new GoodsDetailVal();
         goodsDetailVal.setGoodsVal(goodsVal);
         goodsDetailVal.setMsUser(msuser);
         goodsDetailVal.setMsStatue(msStatus);
         goodsDetailVal.setRemainSeconds(remainSeconds);
-        //将对象返回给前端
-        System.out.println("成功返回给客户端");
         return Result.success(goodsDetailVal);
     }
 

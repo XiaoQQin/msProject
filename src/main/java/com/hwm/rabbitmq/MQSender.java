@@ -14,25 +14,14 @@ public class MQSender {
     @Autowired
     AmqpTemplate amqpTemplate;
 
-//    public void send(Object message){
-//        String msg = RabbitUtils.beanToString(message);
-//        logger.info("send message: "+msg);
-//        amqpTemplate.convertAndSend(MQConfig.QUEUE, msg);
-//    }
-//
-//
-//
-//    public void sendTopic(Object message){
-//        String msg = RabbitUtils.beanToString(message);
-//        logger.info("send topic message:"+msg);
-//        amqpTemplate.convertAndSend(MQConfig.TOPIC_EXCHANGE, "topic.key1", msg+"1");
-//        amqpTemplate.convertAndSend(MQConfig.TOPIC_EXCHANGE, "topic.key1", msg+"2");
-//    }
-
+    /**
+     * 发送消息到消息队列
+     * @param msMessage
+     */
     public void sendMsMessage(MSMessage msMessage) {
         String msg = RabbitUtils.beanToString(msMessage);
         logger.info("send message: "+msg);
-        amqpTemplate.convertAndSend(MQConfig.QUEUE, msg);
+        amqpTemplate.convertAndSend(MQConfig.MSQUEUE, msg);
 
     }
 }

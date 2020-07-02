@@ -7,8 +7,6 @@ import com.hwm.result.Result;
 import com.hwm.service.GoodsService;
 import com.hwm.service.MsService;
 import com.hwm.val.GoodsVal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class MQreceiver {
 
-    private static Logger logger = LoggerFactory.getLogger(MQSender.class);
 
 
     @Autowired

@@ -51,6 +51,11 @@ public class OrderServiceImpl implements OrderService{
         return orderInfo;
     }
 
+    /**
+     * 根据订单id获取相关订单
+     * @param orderId
+     * @return
+     */
     @Override
     public OrderInfo getOrderById(long orderId) {
         return orderDao.getOrderById(orderId);

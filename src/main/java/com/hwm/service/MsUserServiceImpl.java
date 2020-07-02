@@ -50,6 +50,13 @@ public class MsUserServiceImpl implements MsUserService{
     }
 
 
+    /**
+     * 更新密码
+     * @param token
+     * @param id
+     * @param formPass
+     * @return
+     */
     @Override
     public boolean updatePassword(String token, long id, String formPass) {
         //首先获取相关id
@@ -73,9 +80,14 @@ public class MsUserServiceImpl implements MsUserService{
         return false;
     }
 
+    /**
+     * 登录
+     * @param response
+     * @param loginVo
+     * @return
+     */
     @Override
     public boolean login(HttpServletResponse response,LoginVal loginVo) {
-
         //传入的参数为空
         if(loginVo==null){
             throw new GlobalException(CodeMsg.SERVER_ERROR);
@@ -97,17 +109,16 @@ public class MsUserServiceImpl implements MsUserService{
         }
         //生成cookie
         String uuid = UUIDUtil.uuid();
-//        //存入redis
-//        redisService.set(UserProfix.token,uuid,msUser);
-//        //生成cooki,并且返回
-//        Cookie cookie=new Cookie(COOKI_NAME_TOKEN,uuid);
-//        cookie.setMaxAge(UserProfix.token.expireSeconds());
-//        cookie.setPath("/");
-//        response.addCookie(cookie);
         addCookie(response,uuid,msUser);
         return true;
     }
 
+    /**
+     * 获取存在redis缓存中商品的token
+     * @param response
+     * @param token
+     * @return
+     */
     @Override
     public MsUser getUserByToken(HttpServletResponse response,String token) {
         if(StringUtils.isEmpty(token))
@@ -120,7 +131,12 @@ public class MsUserServiceImpl implements MsUserService{
     }
 
 
-
+    /**
+     *
+     * @param response
+     * @param token
+     * @param msUser
+     */
     private void addCookie(HttpServletResponse response,String token,MsUser msUser){
         //存入redis
         redisService.set(UserProfix.token,token,msUser);

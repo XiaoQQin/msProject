@@ -26,18 +26,27 @@ public class LoginController {
     MsUserService msUserService;
 
 
+    /**
+     * 到登录页面
+     * @return
+     */
     @RequestMapping("/to_login")
     public String toLogin(){
         return "login";
     }
 
+    /**
+     * 登录
+     * @param response
+     * @param loginVo
+     * @return
+     */
     @RequestMapping("/do_login")
     @ResponseBody
     public Result<Boolean> doLogin(HttpServletResponse response,@Valid LoginVal loginVo){
         logger.info(loginVo.toString());
         //登陆
         msUserService.login(response,loginVo);
-        System.out.println("test login val");
         return Result.success(true);
     }
 }

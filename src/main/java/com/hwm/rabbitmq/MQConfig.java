@@ -16,36 +16,37 @@ public class MQConfig {
     public static final String TOPIC_EXCHANGE="topic_exchange";
     public static final String MSQUEUE="msqueue";
     //direct exchange
+ //   @Bean
+//    public Queue queue(){
+//        return new Queue("queue", true);
+//    }
     @Bean
-    public Queue queue(){
-        return new Queue("queue", true);
-    }
-
-    //Toic模式，交换机exchange
-    //
-    @Bean
-    public Queue topicQueue1(){
-        return new Queue(TOPIC_QUEUE1, true);
-    }
-
-    @Bean
-    public Queue topicQueue2(){
-        return new Queue(TOPIC_QUEUE2, true);
-    }
-
-    @Bean
-    public TopicExchange topicExchange(){
-        return new TopicExchange(TOPIC_EXCHANGE);
-    }
-
-    @Bean
-    public Binding topicBinding1(){
-        return BindingBuilder.bind(topicQueue1()).to(topicExchange()).with("topic.key1");
-    }
-
-    @Bean
-    public Binding topicBinding2(){
-        return BindingBuilder.bind(topicQueue2()).to(topicExchange()).with("topic.#");
-    }
+    public Queue queue(){return new Queue(MSQUEUE, true);}
+//    //Toic模式，交换机exchange
+//    //
+//    @Bean
+//    public Queue topicQueue1(){
+//        return new Queue(TOPIC_QUEUE1, true);
+//    }
+//
+//    @Bean
+//    public Queue topicQueue2(){
+//        return new Queue(TOPIC_QUEUE2, true);
+//    }
+//
+//    @Bean
+//    public TopicExchange topicExchange(){
+//        return new TopicExchange(TOPIC_EXCHANGE);
+//    }
+//
+//    @Bean
+//    public Binding topicBinding1(){
+//        return BindingBuilder.bind(topicQueue1()).to(topicExchange()).with("topic.key1");
+//    }
+//
+//    @Bean
+//    public Binding topicBinding2(){
+//        return BindingBuilder.bind(topicQueue2()).to(topicExchange()).with("topic.#");
+//    }
 
 }

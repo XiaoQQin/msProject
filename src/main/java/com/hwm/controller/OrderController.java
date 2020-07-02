@@ -27,11 +27,19 @@ public class OrderController {
     @Autowired
     GoodsService goodsService;
 
+    /**
+     * 订单详情
+     * @param model
+     * @param msuser
+     * @param orderId
+     * @return
+     */
     @RequestMapping(value = "/detail")
     @ResponseBody
     public Result getOrder(Model model, MsUser msuser, @RequestParam("orderId")long orderId){
         if(msuser==null)
             return Result.error(CodeMsg.SESSION_ERROR);
+        //根据订单id获取订单
         OrderInfo orderInfo=orderService.getOrderById(orderId);
         if(orderInfo==null)
             return Result.error(CodeMsg.ORDER_NOT_EXIST);

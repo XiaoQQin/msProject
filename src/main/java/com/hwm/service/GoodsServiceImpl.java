@@ -17,6 +17,10 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     GoodsDao goodsDao;
 
+    /**
+     * 获取所有商品
+     * @return
+     */
     @Override
     public List<GoodsVal> listGoodsVal(){
         List<GoodsVal> goodsvallist = goodsDao.getGoodsvallist();
@@ -24,9 +28,13 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsvallist;
     }
 
+    /**
+     * 获取单个商品
+     * @param goodsId 商品id
+     * @return
+     */
     @Override
     public GoodsVal getGoodsValById(long goodsId) {
-        System.out.println("service"+goodsId);
         GoodsVal goodsVal=goodsDao.getGoodValById(goodsId);
         if(goodsVal==null)  throw  new GlobalException(CodeMsg.DATABASE_ERROR);
         return goodsVal;

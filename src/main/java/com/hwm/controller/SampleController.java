@@ -50,20 +50,20 @@ public class SampleController {
 
 
 
-    //direct方式
-    @RequestMapping("/rabbit")
-    @ResponseBody
-    public Result testRabbitMQ() {
-        mqSender.send("hello rabbit");
-        return Result.success("test success");
-    }
-
-
-    //direct方式
-    @RequestMapping("/mqTopic")
-    @ResponseBody
-    public Result testRabbitMQTopic() {
-        mqSender.sendTopic("hello topic");
-        return Result.success("test success");
-    }
+//    //direct方式
+//    @RequestMapping("/rabbit")
+//    @ResponseBody
+//    public Result testRabbitMQ() {
+//        mqSender.send("hello rabbit");
+//        return Result.success("test success");
+//    }
+//
+//
+//    //direct方式
+//    @RequestMapping("/mqTopic")
+//    @ResponseBody
+//    public Result testRabbitMQTopic() {
+//        mqSender.sendTopic("hello topic");
+//        return Result.success("test success");
+//    }
 }

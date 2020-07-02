@@ -129,13 +129,12 @@ public class RedisService {
      * @param delta 要增加几（大于0）
      * @return
      */
-    public long incr(KeyPrefix prefix,String key, long delta) {
+    public long decr(KeyPrefix prefix,String key, long delta) {
         String realKey=prefix.getPrefix()+key;
         if (delta < 0) {
-            throw new RuntimeException("递增因子必须大于0。");
+            throw new RuntimeException("递减因子必须大于0。");
         }
-
-        return this.redisTemplate.opsForValue().increment(realKey, delta);
+        return this.redisTemplate.opsForValue().decrement(realKey, delta);
     }
 
     /**
@@ -145,13 +144,16 @@ public class RedisService {
      * @param delta 要减少几（大于0）
      * @return
      */
-    public long decr(KeyPrefix prefix,String key, long delta) {
+    /**
+     * 增加值
+     * */
+    public long incr(KeyPrefix prefix,String key, long delta) {
         String realKey=prefix.getPrefix()+key;
         if (delta < 0) {
             throw new RuntimeException("递减因子必须大于0。");
         }
-
-        return this.redisTemplate.opsForValue().decrement(key, delta);
+        return this.redisTemplate.opsForValue().increment(realKey, delta);
     }
+
 
 }
