@@ -1,8 +1,10 @@
 # msProject
-基于SpringBoot、mybatis、redis、RabbitMQ的秒杀系统  
+基于SpringBoot、mybatis、redis、RabbitMQ的秒杀系统。 前后端进行分离，使用ajax进行访问后端接口，获取数据。   
 -  前端： jquery,thymeleaf
 -  后端数据库: Springboot,Mybatis  
--  中间件: Redis,RabbitMQ
+-  中间件: Redis,RabbitMQ  
+  
+
 ## 项目流程
 1. 从登录到执行秒杀的流程
 ![1l.PNG](https://i.loli.net/2020/07/03/LhS6BIHnFx4NGkf.png)
