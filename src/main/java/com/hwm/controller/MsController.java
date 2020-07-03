@@ -146,7 +146,7 @@ public class MsController implements InitializingBean {
     @ResponseBody
     public Result getPath( MsUser msuser,
                           @RequestParam("goodsId")long goodsId,
-                          @RequestParam(value = "verifyCode",defaultValue = "0")int verifyCode){
+                          @RequestParam(value = "verifyCode")int verifyCode){
         if(msuser==null)return Result.error(CodeMsg.SESSION_ERROR);
         //检验验证码是否正确
         boolean check = msService.checkVerifyCode(msuser, goodsId, verifyCode);

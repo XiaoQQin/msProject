@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Signin Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/signin.css}" rel="stylesheet">
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <!-- bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />-->
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+<body class="text-center">
+<form class="form-signin" name="loginForm" id="loginForm" method="post" >
+
+    <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+    <div  class="m-2">
+        <label class="sr-only" th:text="#{login.username}">Username</label>
+        <input type="text" id="mobile" name = "mobile" class="form-control" th:placeholder="#{login.username}" required="true" minlength="11" maxlength="11">
+    </div>
+    <div class="m-2">
+        <label class="sr-only" th:text="#{login.password}">password</label>
+        <input type="password" id="password" name="password" class="form-control" th:placeholder="#{login.password}" required="true" minlength="6" maxlength="16">
+    </div>
+    <div class="m-2 flex-column">
+        <button class="btn btn-lg btn-primary btn-block " type="submit" th:text="#{login.btn}" onclick="login()">Sign in</button>
+    </div>
+
+    <p class="mt-5 mb-3 text-muted">© 20xx-20xx</p>
+    <a class="btn btn-sm"  th:href="@{/index.html(l='zh_CN')}">中文</a>
+    <a class="btn btn-sm" th:href="@{/index.html(l='en_US')}">English</a>
+</form>
+
+</body>
+<script>
+    function login(){
+        $("#loginForm").validate({
+            submitHandler:function(form){
+                doLogin();
+            }
+        });
+    }
+    function doLogin(){
+        g_showLoading();
+
+        var inputPass = $("#password").val();
+        var salt = g_passsword_salt;
+        var str = ""+salt.charAt(0)+salt.charAt(2) + inputPass +salt.charAt(5) + salt.charAt(4);
+        var password = md5(str);
+
+        $.ajax({
+            url: "/login/do_login",
+            type: "POST",
+            data:{
+                mobile:$("#mobile").val(),
+                password: password
+            },
+            success:function(data){
+                layer.closeAll();
+                if(data.code == 0){
+                    layer.msg("成功");
+                    window.location.href="/goods/to_list";
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.closeAll();
+            }
+        });
+    }
+</script>
+</html>

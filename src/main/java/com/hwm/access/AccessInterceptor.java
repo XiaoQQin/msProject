@@ -64,11 +64,12 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
             }else {
                 //do nothing
             }
-            //设置前置
+            //设置前置，里面包含过期时间
             AccessPrefix accessPrefix = AccessPrefix.withExpire(seconds);
+            //获取redis中存储的时间
             Integer accessCount = redisService.get(accessPrefix, key);
             if(accessCount==null){
-                redisService.set(accessPrefix, key, 1);
+                redisService.set(accessPrefix, key, 1, accessPrefix.expireSeconds());
             }else if(accessCount<maxCount){
                 redisService.incr(accessPrefix, key, 1);
             }else{
@@ -80,6 +81,8 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void render(HttpServletResponse response, CodeMsg codeMsg)throws Exception{
+        //设置返回的字节编码
+        response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
         String s = JSON.toJSONString(Result.error(codeMsg));
         outputStream.write(s.getBytes("UTF-8"));

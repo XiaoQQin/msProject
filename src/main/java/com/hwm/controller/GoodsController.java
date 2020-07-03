@@ -65,7 +65,7 @@ public class GoodsController {
                 request.getLocale(),
                 model.asMap());
         //springBoot手动渲染
-        html=thymeleafViewResolver.getTemplateEngine().process("goods_list",wc);
+        html=thymeleafViewResolver.getTemplateEngine().process("goods_list1",wc);
         if(!StringUtils.isEmpty(html)){
             redisService.set(GoodsPrefix.getGoodsList, "", html);
         }

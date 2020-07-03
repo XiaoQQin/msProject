@@ -5,7 +5,7 @@ import com.hwm.domain.MsOrder;
 import com.hwm.domain.MsUser;
 import com.hwm.domain.OrderInfo;
 import com.hwm.redis.MsOrderPrefix;
-import com.hwm.redis.MsProfix;
+import com.hwm.redis.MsPrefix;
 import com.hwm.redis.RedisService;
 import com.hwm.utils.MD5Util;
 import com.hwm.utils.UUIDUtil;
@@ -102,7 +102,7 @@ public class MsServiceImpl implements MsService{
     public String createMsPath(MsUser msuser, long goodsId) {
 
         String path = MD5Util.md5(UUIDUtil.uuid() + "123456");
-        redisService.set(MsProfix.getMsPath, msuser.getId()+"_"+goodsId, path);
+        redisService.set(MsPrefix.getMsPath, msuser.getId()+"_"+goodsId, path);
         return path;
     }
 
@@ -116,7 +116,7 @@ public class MsServiceImpl implements MsService{
     @Override
     public boolean checkPath(String path, MsUser msuser, long goodsId) {
         if(path==null || msuser==null)return false;
-        String pathOld = redisService.get(MsProfix.getMsPath, msuser.getId() + "_" + goodsId);
+        String pathOld = redisService.get(MsPrefix.getMsPath, msuser.getId() + "_" + goodsId);
         return path.equals(pathOld);
     }
 
@@ -157,7 +157,7 @@ public class MsServiceImpl implements MsService{
         g.dispose();
         //把验证码结果存到redis中
         int rnd = calc(verifyCode);
-        redisService.set(MsProfix.getMsVerifyCode, msuser.getId()+","+goodsId, rnd);
+        redisService.set(MsPrefix.getMsVerifyCode, msuser.getId()+","+goodsId, rnd);
         //输出图片
         return image;
     }
@@ -165,12 +165,12 @@ public class MsServiceImpl implements MsService{
     @Override
     public boolean checkVerifyCode(MsUser msuser, long goodsId, int verifyCode) {
         if(msuser==null ||goodsId<0)return false;
-        Integer codeOld = redisService.get(MsProfix.getMsVerifyCode, msuser.getId() + "," + goodsId);
+        Integer codeOld = redisService.get(MsPrefix.getMsVerifyCode, msuser.getId() + "," + goodsId);
         if(codeOld==null || codeOld-verifyCode!=0){
             return false;
         }else{
             //删除掉原先的验证码
-            boolean remove = redisService.remove(MsProfix.getMsVerifyCode, msuser.getId() + "," + goodsId);
+            boolean remove = redisService.remove(MsPrefix.getMsVerifyCode, msuser.getId() + "," + goodsId);
             if(!remove)
                 return false;
             return true;
@@ -216,7 +216,7 @@ public class MsServiceImpl implements MsService{
      * @param goodsId
      */
     private void setGoodsOver(Long goodsId) {
-        redisService.set(MsProfix.isGoodsOver, goodsId+"", true);
+        redisService.set(MsPrefix.isGoodsOver, goodsId+"", true);
     }
 
     /**
@@ -225,6 +225,6 @@ public class MsServiceImpl implements MsService{
      * @return true:秒杀完  false：还没完
      */
     private boolean getGoodsOver(long goodsId) {
-        return redisService.hasKey(MsProfix.isGoodsOver, ""+goodsId);
+        return redisService.hasKey(MsPrefix.isGoodsOver, ""+goodsId);
     }
 }

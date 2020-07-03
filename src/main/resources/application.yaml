@@ -3,7 +3,8 @@ spring:
   thymeleaf:
     cache: false
     mode: HTML
-
+  messages:
+    basename: i18n.login
   datasource:
     username: root
     password: root

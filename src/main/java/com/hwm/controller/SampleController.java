@@ -4,7 +4,6 @@ import com.hwm.domain.User;
 import com.hwm.rabbitmq.MQSender;
 import com.hwm.rabbitmq.MQreceiver;
 import com.hwm.redis.RedisService;
-import com.hwm.redis.UserProfix;
 import com.hwm.result.Result;
 import com.hwm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

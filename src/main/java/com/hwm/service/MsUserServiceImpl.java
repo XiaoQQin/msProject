@@ -5,7 +5,7 @@ import com.hwm.domain.MsUser;
 import com.hwm.exception.GlobalException;
 import com.hwm.redis.MsUserPrefix;
 import com.hwm.redis.RedisService;
-import com.hwm.redis.UserProfix;
+import com.hwm.redis.UserPrefix;
 import com.hwm.result.CodeMsg;
 import com.hwm.utils.MD5Util;
 import com.hwm.utils.UUIDUtil;
@@ -114,7 +114,7 @@ public class MsUserServiceImpl implements MsUserService{
     }
 
     /**
-     * 获取存在redis缓存中商品的token
+     * 获取存在redis缓存中用户的
      * @param response
      * @param token
      * @return
@@ -124,7 +124,7 @@ public class MsUserServiceImpl implements MsUserService{
         if(StringUtils.isEmpty(token))
             return null;
         //获取redis中的user
-        MsUser msUser=redisService.get(UserProfix.token,token);
+        MsUser msUser=redisService.get(UserPrefix.token,token);
         if(msUser!=null)
             addCookie(response,token,msUser);
         return  msUser;
@@ -139,10 +139,10 @@ public class MsUserServiceImpl implements MsUserService{
      */
     private void addCookie(HttpServletResponse response,String token,MsUser msUser){
         //存入redis
-        redisService.set(UserProfix.token,token,msUser);
+        redisService.set(UserPrefix.token,token,msUser);
         //生成cooki,并且返回
         Cookie cookie=new Cookie(COOKI_NAME_TOKEN,token);
-        cookie.setMaxAge(UserProfix.token.expireSeconds());
+        cookie.setMaxAge(UserPrefix.token.expireSeconds());
         cookie.setPath("/");
         response.addCookie(cookie);
     }

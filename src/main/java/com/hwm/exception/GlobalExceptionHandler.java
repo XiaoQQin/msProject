@@ -16,6 +16,12 @@ import java.util.List;
 @ControllerAdvice //增强注解
 public class GlobalExceptionHandler {
 
+    /**
+     * 捕捉全局异常
+     * @param request
+     * @param e
+     * @return
+     */
     @ExceptionHandler(value = Exception.class)
     public Result<String> exceptionHandler(HttpServletRequest request,Exception e){
         //如果异常是全局异常
