@@ -33,7 +33,7 @@ spring:
 
 
   redis:
-    host: 182.92.169.128
+    host: 127.0.0.1
     port: 6379
     password: 123456
   resources:
@@ -46,7 +46,7 @@ spring:
 
 
   rabbitmq:
-    host: 182.92.169.128
+    host: 127.0.0.1
     port: 5672
     username: hwm
     password: 123456
