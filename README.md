@@ -9,9 +9,9 @@
 1. 从登录到执行秒杀的流程
 ![l1.PNG](./img/lc1.PNG)
 2. 执行秒杀流程  
-![l2.PNG](./img/lc2.png)
+![l2.PNG](./img/lc2.PNG)
 ## 展示
-![xq.PNG](./img/xq.png)
+![xq.PNG](./img/xq.PNG)
 
 ## 秒杀接口优化
 
