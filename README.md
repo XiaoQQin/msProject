@@ -3,15 +3,15 @@
 -  前端： jquery,thymeleaf
 -  后端数据库: Springboot,Mybatis  
 -  中间件: Redis,RabbitMQ  
-  
+
 
 ## 项目流程
 1. 从登录到执行秒杀的流程
-![1l.PNG](https://i.loli.net/2020/07/03/LhS6BIHnFx4NGkf.png)
+![l1.PNG](./img/lc1.PNG)
 2. 执行秒杀流程  
-![2l.PNG](https://i.loli.net/2020/07/03/6hTKZLsFkqdRiEQ.png)
+![l2.PNG](./img/lc2.png)
 ## 展示
-![xq.PNG](https://i.loli.net/2020/07/03/ydAnOwqm2LQaZVG.png)
+![xq.PNG](./img/xq.png)
 
 ## 秒杀接口优化
 
